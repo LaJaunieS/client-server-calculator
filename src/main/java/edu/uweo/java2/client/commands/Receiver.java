@@ -2,6 +2,8 @@ package edu.uweo.java2.client.commands;
 
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,12 +67,31 @@ public class Receiver {
     public void action(DivCommand command) {
         log.info("divide command detected");
         BigDecimal zero = BigDecimal.valueOf(0);
-        try {
-            command.setResult(command.getOperand1().divide(command.getOperand2()));
-        } catch (ArithmeticException ex) {
-            log.warn("An arithmetic exception was thrown, setting result to zero");
+        int scale = command.getOperand2().scale()-command.getOperand1().scale();
+        /*If either operand is zero, can't divide...*/
+        if ((command.getOperand1().compareTo(zero)==0)||
+                (command.getOperand2().compareTo(zero)==0)) {
+            log.warn("neither value can be zero, setting result to zero");
             command.setResult(zero);
+            throw new ArithmeticException();
+            
+        } else {
+            /*...handle exceptions from recurring decimals...*/
+            try {
+                command.setResult(command.getOperand1().
+                        divide(command.getOperand2()));
+            } catch (ArithmeticException ex) {
+                BigDecimal operation = command.getOperand1().
+                            divide(command.getOperand2(),
+                                    MathContext.DECIMAL64);
+                command.setResult(operation);
+                log.info("An arithmetic exception was thrown, result will be "
+                        + "set to precision matching Decimal64 format, "
+                        + "rounding mode of HALF_EVEN");
+            }
         }
+            
+        
         System.out.println("divCommand result: " + command.getResult().floatValue());
         
     }
