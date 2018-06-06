@@ -1,4 +1,4 @@
-package guiButtons;
+package edu.uweo.java2.guiButtons;
 
 import javax.swing.JButton;
 

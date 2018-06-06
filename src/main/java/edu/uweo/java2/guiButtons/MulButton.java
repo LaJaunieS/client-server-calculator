@@ -1,4 +1,4 @@
-package guiButtons;
+package edu.uweo.java2.guiButtons;
 
 public class MulButton extends AbstractButton {
     public MulButton(String text, Double value1, Double value2) {

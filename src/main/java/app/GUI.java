@@ -15,12 +15,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import edu.uweo.java2.client.Client;
-import guiButtons.AbstractButton;
-import guiButtons.AddButton;
-import guiButtons.ButtonReceiver;
-import guiButtons.DivButton;
-import guiButtons.MulButton;
-import guiButtons.SubButton;
+import edu.uweo.java2.guiButtons.AbstractButton;
+import edu.uweo.java2.guiButtons.AddButton;
+import edu.uweo.java2.guiButtons.ButtonReceiver;
+import edu.uweo.java2.guiButtons.DivButton;
+import edu.uweo.java2.guiButtons.MulButton;
+import edu.uweo.java2.guiButtons.SubButton;
 
 public class GUI implements Runnable {
 
