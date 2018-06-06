@@ -61,7 +61,9 @@ public class Receiver {
      * computation. If a given command's operand1 or operand2 fields are set to the 
      * <code>BigDecimal</code> value of 0, it logs that an <code>ArithmeticException</code>
      * was thrown and sets the given command's result value to the <code>BogDecimal</code>
-     * value of 0.
+     * value of 0. If an <code>ArithmeticException</code> occurs for another reason (such
+     * as a quotient that is a recurring decimal, precision of the result is set to matching
+     * Decimal64 format and a rounding mode of <code>MathContext.HALF_EVEN</code>
      * @param command an instance of <code>DivCommand</code>
      */
     public void action(DivCommand command) {
@@ -90,10 +92,7 @@ public class Receiver {
                         + "rounding mode of HALF_EVEN");
             }
         }
-            
-        
         System.out.println("divCommand result: " + command.getResult().floatValue());
-        
     }
     
     /**Will be used for testing unrecognized commands*/
