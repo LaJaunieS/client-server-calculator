@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import app.ClientServerTester;
 import edu.uweo.java2.client.commands.AbstractCommand;
+import edu.uweo.java2.client.commands.NAKCommand;
 import edu.uweo.java2.client.commands.ShutdownCommand;
 
 /**Encapsulates a server which listens for and accepts request(s) from 
@@ -135,7 +138,7 @@ public class Server {
      * @author slajaunie
      * @see edu.uweo.java2.client.commands.Receiver
      */
-    public class Receiver extends edu.uweo.java2.client.commands.Receiver {
+    public class Receiver extends edu.uweo.java2.client.commands.Receiver implements Serializable{
      /*
       * The Receiver subclass will execute as it did in assignment 8 except:
 
@@ -181,7 +184,7 @@ public class Server {
      */
     private class Process implements Callable<AbstractCommand> {
         private Socket client;
-        private String serverResponse; 
+        private BigDecimal serverResponse; 
         
         /**Constructs a new instance with the given <code>Socket</code>
          * @param client a <code>Socket</code> representing a request from a
@@ -212,24 +215,24 @@ public class Server {
                 Object obj = oiStream.readObject();
                 /*First confirm if returned obj is a command*/
                 if (!(obj instanceof AbstractCommand)){
-                        /*if command not recognized, print NAK string to output stream*/
+                        /*if command not recognized, write NAK string to output stream*/
                         cst.serverNAKReadByClient = true;
                         log.warn("Command not recognized");
-                        serverResponse = "NAK";
-                        ooStream.writeObject("NAK");
+                        ooStream.writeObject("Command not recognized");
                         throw new ClassNotFoundException("Command must be an instance of"
                                 + " AbstractCommand");
                 } else {
                     command = (AbstractCommand) obj;
-                    /*print string acknowledging connect to output stream*/
                     /*execute the command*/
                     cst.commandObjAcceptedAndResponseSentToClient = true;
                     command.setReceiver(receiver);
                     if (command instanceof ShutdownCommand) {
-                        serverResponse = "SHUTDOWN";
+                        /*If shutdown command, execute shutdown and write back a message*/
                         ooStream.writeObject("SHUTDOWN");
                         receiver.action((ShutdownCommand)command);
                     } else {
+                        /*If everything checks out, execute the command and write result back to 
+                         * the client*/
                         receiver.pause(command.getWorkMillisMin(),
                                 command.getWorkMillisMax());
                         command.execute();

@@ -1,5 +1,6 @@
 package edu.uweo.java2.client.commands;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**A subclass of <code>AbstractCommand</code> in which an attached
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
  * @author slajaunie
  *
  */
-public class MulCommand extends AbstractCommand {
+public class MulCommand extends AbstractCommand implements Serializable {
 
     private static final long serialVersionUID = 5573615746778988473L;
 

@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.file.Path;
@@ -56,13 +57,13 @@ public class Client {
      * @return a <code>String</code> that is the acknowledgement sent from the server
      * @throws IOException if there was an error connecting to the server
      */
-    public Object execute(AbstractCommand command) throws IOException {
+    public BigDecimal execute(AbstractCommand command) throws IOException {
         
         /*Get the IP address for this local machine*/
         InetAddress addr = InetAddress.getLoopbackAddress();
         
-        /*will contain response back from server*/
-        String serverResponse=null;
+        /*will contain response/command result back from server*/
+        BigDecimal serverResponse=null;
         /*open socket to connect with server*/
         log.info("Making client request at port {}",this.port);
         
@@ -82,13 +83,17 @@ public class Client {
             /*write command object to send to server*/
             ooStream.writeObject(command);
             /*get returned/executed command result from server*/
-            serverResponse = oiStream.readObject().toString();
-            if (serverResponse.equalsIgnoreCase("NAK")) {
-                log.info("Invalid ACK from server");
-            } else {
-                cst.ServerAckReadByClient = true;
-                log.info("request from server acknowledged");
-            }
+//            if (!(oiStream.readObject() instanceof AbstractCommand))
+//                log.info("Object returned from server is not an instance of AbstractCommand");
+//            else 
+                
+                serverResponse = (BigDecimal) oiStream.readObject();
+                if (serverResponse.toString().equalsIgnoreCase("NAK")) {
+                    log.info("Invalid ACK from server");
+                } else {
+                    cst.ServerAckReadByClient = true;
+                    log.info("request from server acknowledged");
+                }
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }

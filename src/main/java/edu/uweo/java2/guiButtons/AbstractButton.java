@@ -1,6 +1,10 @@
 package edu.uweo.java2.guiButtons;
 
+import java.math.BigDecimal;
+
 import javax.swing.JButton;
+
+import edu.uweo.java2.client.commands.AbstractCommand;
 
 /**Encapsulates a custom button (avoiding having to have a million if
  * statements in the listener implementation)
@@ -31,7 +35,7 @@ public abstract class AbstractButton extends JButton {
     
     /**Will be implemented by the AbstractButton sub-class
      */
-    public abstract String execute();
+    public abstract BigDecimal execute();
     
     /**Gets the instance of this AbstractButton's ButtonReceiver
      * @return this AbstractButton's ButtonReceiver instance

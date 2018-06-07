@@ -1,6 +1,7 @@
 package edu.uweo.java2.guiButtons;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import edu.uweo.java2.client.Client;
 import edu.uweo.java2.client.commands.AbstractCommand;
@@ -22,10 +23,9 @@ public class ButtonReceiver {
      * @return the <code>String</code> Object returned by the Server instance in
      * response to the client request- will contain the result of the given AddCommand 
      */
-    public String action(AddButton button, Double value1, Double value2) {
+    public BigDecimal action(AddButton button, Double value1, Double value2) {
         AddCommand cmd = new AddCommand(value1,value2,100,100);
-        String serverResponse=null;
-        serverResponse = this.execute(cmd);
+        BigDecimal serverResponse = this.execute(cmd);
         return serverResponse;
     }
     
@@ -40,10 +40,9 @@ public class ButtonReceiver {
      * @return the <code>String</code> Object returned by the Server instance in
      * response to the client request- will contain the result of the given SubCommand 
      */
-    public String action(SubButton button, Double value1, Double value2) {
+    public BigDecimal action(SubButton button, Double value1, Double value2) {
         SubCommand cmd = new SubCommand(value1, value2, 100,100);
-        String serverResponse=null;
-        serverResponse = this.execute(cmd);
+        BigDecimal serverResponse= this.execute(cmd);
         return serverResponse;
     }
     
@@ -58,10 +57,9 @@ public class ButtonReceiver {
      * @return the <code>String</code> Object returned by the Server instance in
      * response to the client request- will contain the result of the given MulCommand 
      */
-    public String action(MulButton button, Double value1, Double value2) {
+    public BigDecimal action(MulButton button, Double value1, Double value2) {
         MulCommand cmd = new MulCommand(value1, value2, 100,100);
-        String serverResponse=null;
-        serverResponse = this.execute(cmd);
+        BigDecimal serverResponse = this.execute(cmd);
         return serverResponse;
     }
     
@@ -76,18 +74,17 @@ public class ButtonReceiver {
      * @return the <code>String</code> Object returned by the Server instance in
      * response to the client request- will contain the result of the given DivCommand 
      */
-    public String action(DivButton button, Double value1, Double value2) {
+    public BigDecimal action(DivButton button, Double value1, Double value2) {
         DivCommand cmd = new DivCommand(value1, value2, 100,100);
-        String serverResponse=null;
-        serverResponse = this.execute(cmd);
+        BigDecimal serverResponse = this.execute(cmd);
         return serverResponse;
     }
     
-    public String execute(AbstractCommand cmd) {
+    public BigDecimal execute(AbstractCommand cmd) {
         Client client = new Client(4885);
-        String serverResponse = null;
+        BigDecimal serverResponse = null;
         try {
-            serverResponse = (String) client.execute(cmd).toString();
+            serverResponse = client.execute(cmd);
         } catch (IOException e) {
             e.printStackTrace();
         }

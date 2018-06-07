@@ -1,5 +1,9 @@
 package edu.uweo.java2.guiButtons;
 
+import java.math.BigDecimal;
+
+import edu.uweo.java2.client.commands.AbstractCommand;
+
 public class DivButton extends AbstractButton {
 
     /**Constructs a new DivButton by invoking the constructor of the
@@ -23,8 +27,8 @@ public class DivButton extends AbstractButton {
      * @see edu.uweo.java2.guiButtons.AbstractButton#execute()
      */
     @Override
-    public String execute() {
-        String serverResponse = 
+    public BigDecimal execute() {
+        BigDecimal serverResponse = 
                 this.getReceiver().action(this, value1, value2);
         return serverResponse;
     }

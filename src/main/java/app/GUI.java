@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import edu.uweo.java2.client.Client;
+import edu.uweo.java2.client.commands.AbstractCommand;
 import edu.uweo.java2.guiButtons.AbstractButton;
 import edu.uweo.java2.guiButtons.AddButton;
 import edu.uweo.java2.guiButtons.ButtonReceiver;
@@ -152,8 +155,7 @@ public class GUI implements Runnable {
             ButtonReceiver buttonReceiver = new ButtonReceiver();
             Double value1 = Double.parseDouble(value1TextBox.getText());
             Double value2 = Double.parseDouble(value2TextBox.getText());
-            
-            String serverResponse = null;
+            BigDecimal serverResponse = null;
             
             obj.setValue1(value1);
             obj.setValue2(value2);
@@ -161,7 +163,7 @@ public class GUI implements Runnable {
             /*obj.execute will overload abstract method with appropriate button obj
              * and return a string that is the serverResponse/calculation result*/
             serverResponse = obj.execute();
-            resultsDisplay.setText(serverResponse);
+            resultsDisplay.setText(serverResponse.toString());
             
         }
         

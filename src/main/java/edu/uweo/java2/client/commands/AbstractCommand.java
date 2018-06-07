@@ -21,6 +21,10 @@ public abstract class AbstractCommand implements Serializable{
     /**The result of performing a computation on the operands*/
     BigDecimal result;
     
+    /**Can be used to provide a message from the server relating to execution 
+     * of the class*/
+    String message;
+    
     double workMillisMin;
     double workMillisMax;
 
@@ -142,4 +146,11 @@ public abstract class AbstractCommand implements Serializable{
         return workMillisMax;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
+    public String getMessage() {
+        return this.message;
+    }
 }
