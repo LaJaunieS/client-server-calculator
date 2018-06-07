@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author slajaunie
  *
  */
-public class SubCommand extends AbstractCommand implements Serializable {
+public class SubCommand extends AbstractCommand {
     private static final long serialVersionUID = -5507611038517172115L;
 
     /**Default constructor- sets operand1 and operand2 values to 

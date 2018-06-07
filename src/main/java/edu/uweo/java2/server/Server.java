@@ -138,7 +138,7 @@ public class Server {
      * @author slajaunie
      * @see edu.uweo.java2.client.commands.Receiver
      */
-    public class Receiver extends edu.uweo.java2.client.commands.Receiver implements Serializable{
+    public class Receiver extends edu.uweo.java2.client.commands.Receiver {
      /*
       * The Receiver subclass will execute as it did in assignment 8 except:
 

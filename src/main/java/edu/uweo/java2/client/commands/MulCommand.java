@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * @author slajaunie
  *
  */
-public class MulCommand extends AbstractCommand implements Serializable {
+public class MulCommand extends AbstractCommand  {
 
     private static final long serialVersionUID = 5573615746778988473L;
 

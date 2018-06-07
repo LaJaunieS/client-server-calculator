@@ -21,7 +21,7 @@ import app.ClientServerTester;
  * @author slajaunie
  *
  */
-public class NAKCommand implements Serializable {
+public class NAKCommand  {
     /*
      * Technically, this is not a command; it is an object returned 
      * by the server in the case that the client sends an object 

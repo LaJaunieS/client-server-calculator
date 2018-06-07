@@ -8,7 +8,7 @@ import edu.uweo.java2.server.Server;
  * @author slajaunie
  *
  */
-public class ShutdownCommand extends AbstractCommand implements Serializable {
+public class ShutdownCommand extends AbstractCommand {
     /**Instantiates a new ShutdownCommand, calling the default super
      * constructor of <code>AbstractCommand</code>
      */

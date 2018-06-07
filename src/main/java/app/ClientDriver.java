@@ -40,7 +40,7 @@ public class ClientDriver {
         ShutdownCommand sdCommand = new ShutdownCommand();
         
         
-        List<AbstractCommand> responseList = new ArrayList<AbstractCommand>();
+        List<BigDecimal> responseList = new ArrayList<BigDecimal>();
         
         while (open) {
             try {
