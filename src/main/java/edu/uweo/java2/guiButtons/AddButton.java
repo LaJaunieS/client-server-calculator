@@ -21,7 +21,7 @@ public class AddButton extends AbstractButton {
     
     /**Executes this command, by invoking the ButtonReceiver's <code>action</code>
      * method, passing this command as an argument. 
-     * @return serverResponse a <code>String</code> that will be the computed result
+     * @return serverResponse a <code>BigDecimal</code> that will be the computed result
      * executed by the server in response to the appropriate command, 
      * and returned to the client via an Object stream
      * @see edu.uweo.java2.guiButtons.AbstractButton#execute()

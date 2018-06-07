@@ -25,6 +25,11 @@ import edu.uweo.java2.guiButtons.DivButton;
 import edu.uweo.java2.guiButtons.MulButton;
 import edu.uweo.java2.guiButtons.SubButton;
 
+/*TO DO- add something to handle if text field values are not numbers
+ * Can limit to numbers? Maybe with a regex? JFormattedTextField*/
+/*Set maximum length of text field*/
+/*Work on styling GUI components*/
+
 public class GUI implements Runnable {
 
     /*The components, initalized in prepareLayout()*/
@@ -161,7 +166,7 @@ public class GUI implements Runnable {
             obj.setValue2(value2);
             obj.setReceiver(buttonReceiver);
             /*obj.execute will overload abstract method with appropriate button obj
-             * and return a string that is the serverResponse/calculation result*/
+             * and return a BigDecimal that is the serverResponse/calculation result*/
             serverResponse = obj.execute();
             resultsDisplay.setText(serverResponse.toString());
             
