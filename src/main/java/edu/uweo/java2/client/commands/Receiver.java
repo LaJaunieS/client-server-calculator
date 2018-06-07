@@ -69,7 +69,7 @@ public class Receiver {
     public void action(DivCommand command) {
         log.info("divide command detected");
         BigDecimal zero = BigDecimal.valueOf(0);
-        int scale = command.getOperand2().scale()-command.getOperand1().scale();
+        
         /*If either operand is zero, can't divide...*/
         if ((command.getOperand1().compareTo(zero)==0)||
                 (command.getOperand2().compareTo(zero)==0)) {
@@ -81,18 +81,17 @@ public class Receiver {
             /*...handle exceptions from recurring decimals...*/
             try {
                 command.setResult(command.getOperand1().
-                        divide(command.getOperand2()));
+                        divide(command.getOperand2(),MathContext.UNLIMITED));
             } catch (ArithmeticException ex) {
                 BigDecimal operation = command.getOperand1().
                             divide(command.getOperand2(),
                                     MathContext.DECIMAL64);
                 command.setResult(operation);
                 log.info("An arithmetic exception was thrown, result will be "
-                        + "set to precision matching Decimal64 format, "
-                        + "rounding mode of HALF_EVEN");
+                        + "set to precision matching Decimal64 format");
             }
         }
-        System.out.println("divCommand result: " + command.getResult().floatValue());
+        System.out.println("divCommand result: " + command.getResult().doubleValue());
     }
     
     /**Will be used for testing unrecognized commands*/
