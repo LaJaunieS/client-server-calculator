@@ -87,7 +87,7 @@ public class ButtonReceiver {
         Client client = new Client(4885);
         String serverResponse = null;
         try {
-            serverResponse = client.execute(cmd);
+            serverResponse = (String) client.execute(cmd).toString();
         } catch (IOException e) {
             e.printStackTrace();
         }

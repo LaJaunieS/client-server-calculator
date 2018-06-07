@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -55,7 +56,7 @@ public class Client {
      * @return a <code>String</code> that is the acknowledgement sent from the server
      * @throws IOException if there was an error connecting to the server
      */
-    public String execute(AbstractCommand command) throws IOException {
+    public Object execute(AbstractCommand command) throws IOException {
         
         /*Get the IP address for this local machine*/
         InetAddress addr = InetAddress.getLoopbackAddress();
@@ -65,30 +66,30 @@ public class Client {
         /*open socket to connect with server*/
         log.info("Making client request at port {}",this.port);
         
-        //move some/most of this to separate methods
         try (   Socket socket = new Socket(addr,this.port);
-                /*Input stream for ack from server*/
-                InputStream iStream = socket.getInputStream();
-                InputStreamReader reader = new InputStreamReader( iStream );
-                BufferedReader bReader = new BufferedReader( reader );
-                
+                /*Note, OutputStream MUST come before InputStreams,
+                 * otherwise will block*/
                 OutputStream oStream = socket.getOutputStream();
                 /*For passing command object to server*/
-                ObjectOutputStream writer = new ObjectOutputStream( oStream );
+                ObjectOutputStream ooStream = new ObjectOutputStream( oStream );
+                
+                /*Input stream for executed command from server*/
+                InputStream iStream = socket.getInputStream();
+                ObjectInputStream oiStream = new ObjectInputStream( iStream );
                 ) {
             
-            /*write command object to send to server*/
             cst.commandObjWrittenToOutputStream = true;
-            writer.writeObject(command);
-            /*get ack/nak string from server*/
-            serverResponse = bReader.readLine();
+            /*write command object to send to server*/
+            ooStream.writeObject(command);
+            /*get returned/executed command result from server*/
+            serverResponse = oiStream.readObject().toString();
             if (serverResponse.equalsIgnoreCase("NAK")) {
                 log.info("Invalid ACK from server");
             } else {
                 cst.ServerAckReadByClient = true;
                 log.info("request from server acknowledged");
             }
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
         

@@ -201,40 +201,39 @@ public class Server {
         @Override
         public AbstractCommand call() {
             AbstractCommand command = null;
-            try (InputStream iStream = client.getInputStream();
-                    ObjectInputStream oiStream = new ObjectInputStream( iStream );
-                    /*set up stream to send ack to client*/
+            try (   /*Note, OutputStream MUST come before InputStreams,
+                     * otherwise will block*/
                     OutputStream oStream = client.getOutputStream();
-                    PrintWriter writer = new PrintWriter( oStream, true );
+                    ObjectOutputStream ooStream = new ObjectOutputStream( oStream );
+                    
+                    InputStream iStream = client.getInputStream();
+                    ObjectInputStream oiStream = new ObjectInputStream( iStream );
                     ){
                 Object obj = oiStream.readObject();
                 /*First confirm if returned obj is a command*/
                 if (!(obj instanceof AbstractCommand)){
-                        /*if command not recognized, print string to output stream*/
+                        /*if command not recognized, print NAK string to output stream*/
                         cst.serverNAKReadByClient = true;
                         log.warn("Command not recognized");
-                        
                         serverResponse = "NAK";
-                        writer.println("NAK");
+                        ooStream.writeObject("NAK");
                         throw new ClassNotFoundException("Command must be an instance of"
                                 + " AbstractCommand");
                 } else {
                     command = (AbstractCommand) obj;
                     /*print string acknowledging connect to output stream*/
-                    serverResponse = "ACK";
                     /*execute the command*/
                     cst.commandObjAcceptedAndResponseSentToClient = true;
                     command.setReceiver(receiver);
                     if (command instanceof ShutdownCommand) {
                         serverResponse = "SHUTDOWN";
-                        writer.println("SHUTDOWN");
+                        ooStream.writeObject("SHUTDOWN");
                         receiver.action((ShutdownCommand)command);
                     } else {
                         receiver.pause(command.getWorkMillisMin(),
                                 command.getWorkMillisMax());
                         command.execute();
-                        writer.println(command.getResult());
-                        
+                        ooStream.writeObject(command.getResult());
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
