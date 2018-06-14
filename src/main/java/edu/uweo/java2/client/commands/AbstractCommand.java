@@ -13,7 +13,7 @@ public abstract class AbstractCommand implements Serializable{
      * 
      */
     private static final long serialVersionUID = -8852118822270515342L;
-    Receiver receiver;
+    transient Receiver receiver;
     /**The first operand used to compute the result*/
     BigDecimal operand1;
     /**The first operand used to compute the result*/

@@ -23,9 +23,9 @@ public class ButtonReceiver {
      * @return the <code>BigDecimal</code> Object returned by the Server instance in
      * response to the client request- will represent the result of the given AddCommand 
      */
-    public BigDecimal action(AddButton button, Double value1, Double value2) {
+    public AbstractCommand action(AddButton button, Double value1, Double value2) {
         AddCommand cmd = new AddCommand(value1,value2,100,100);
-        BigDecimal serverResponse = this.execute(cmd);
+        AbstractCommand serverResponse = this.execute(cmd);
         return serverResponse;
     }
     
@@ -40,9 +40,9 @@ public class ButtonReceiver {
      * @return the <code>BigDecimal</code> Object returned by the Server instance in
      * response to the client request- will represent the result of the given SubCommand 
      */
-    public BigDecimal action(SubButton button, Double value1, Double value2) {
+    public AbstractCommand action(SubButton button, Double value1, Double value2) {
         SubCommand cmd = new SubCommand(value1, value2, 100,100);
-        BigDecimal serverResponse= this.execute(cmd);
+        AbstractCommand serverResponse= this.execute(cmd);
         return serverResponse;
     }
     
@@ -57,9 +57,9 @@ public class ButtonReceiver {
      * @return the <code>BigDecimal</code> Object returned by the Server instance in
      * response to the client request- will represent the result of the given MulCommand 
      */
-    public BigDecimal action(MulButton button, Double value1, Double value2) {
+    public AbstractCommand action(MulButton button, Double value1, Double value2) {
         MulCommand cmd = new MulCommand(value1, value2, 100,100);
-        BigDecimal serverResponse = this.execute(cmd);
+        AbstractCommand serverResponse = this.execute(cmd);
         return serverResponse;
     }
     
@@ -74,9 +74,9 @@ public class ButtonReceiver {
      * @return the <code>BigDecimal</code> Object returned by the Server instance in
      * response to the client request- will represent the result of the given DivCommand 
      */
-    public BigDecimal action(DivButton button, Double value1, Double value2) {
+    public AbstractCommand action(DivButton button, Double value1, Double value2) {
         DivCommand cmd = new DivCommand(value1, value2, 100,100);
-        BigDecimal serverResponse = this.execute(cmd);
+        AbstractCommand serverResponse = this.execute(cmd);
         return serverResponse;
     }
     
@@ -88,9 +88,9 @@ public class ButtonReceiver {
      * @return a <code>BigDecimal</code> returned by the Server in response to the client
      * request, which will represent the result of the given AbstractCommand
      */
-    public BigDecimal execute(AbstractCommand cmd) {
+    public AbstractCommand execute(AbstractCommand cmd) {
         Client client = new Client(4885);
-        BigDecimal serverResponse = null;
+        AbstractCommand serverResponse = null;
         try {
             serverResponse = client.execute(cmd);
         } catch (IOException e) {

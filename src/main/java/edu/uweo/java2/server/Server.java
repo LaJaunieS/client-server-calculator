@@ -59,7 +59,7 @@ public class Server {
      */
     public Server(int port) {
         this.port = port;
-        this.receiver = new Server.Receiver();
+        this.receiver = new Receiver();
     }
     
     /**Opens the server's connection to being listening
@@ -97,34 +97,25 @@ public class Server {
         listener.setSoTimeout(15000);
         
         ExecutorService pool = Executors.newCachedThreadPool();
-        Future<AbstractCommand> future;
-        List<Future<AbstractCommand>> futures = new ArrayList<>();
 
         while (isActive) {
             try {
                 /*Submit process as a new thread for every client connection
                  * received by the listener and process the object sent
                  * from the client*/
-                future = pool.submit(new Process(listener.accept()));
+                pool.execute(new Process(listener.accept()));
                 log.info("Listening for client connections....");
                 cst.serverListening = true;
-                
-                futures.add(future);
+                /*add the client request to the queue*/
                 /*If client request connected...*/
                 cst.clientConnectionAcceptedByServer = true;
                 log.info("Connection accepted");
-                /*...execute futures/commands in order of receipt*/
-                for (Future<AbstractCommand> f: futures) {
-                    try {
-                            f.get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                }
+                
             } catch (SocketTimeoutException ex) {
                 log.info("Server connection at port {} timed out",port);
                 isActive = false;
             }
+            
         }
         /*Shutdown the pool after all threads have completed*/
         pool.shutdown();
@@ -138,7 +129,7 @@ public class Server {
      * @author slajaunie
      * @see edu.uweo.java2.client.commands.Receiver
      */
-    public class Receiver extends edu.uweo.java2.client.commands.Receiver {
+    public class Receiver extends edu.uweo.java2.client.commands.Receiver implements Serializable {
      /*
       * The Receiver subclass will execute as it did in assignment 8 except:
 
@@ -182,7 +173,7 @@ public class Server {
      * @author slajaunie
      *
      */
-    private class Process implements Callable<AbstractCommand> {
+    private class Process implements Runnable, Serializable {
         private Socket client;
         private BigDecimal serverResponse; 
         
@@ -199,10 +190,10 @@ public class Server {
          * subclass of <code>AbstractCommand</code>, executes that command via this 
          * server's attached receiver. Sends an acknowledgement back to the client via 
          * an <code>OutputStream</code>.
-         * @see java.util.concurrent.Callable#call()
+         * @see java.util.concurrent.Runnable#run()
          */
         @Override
-        public AbstractCommand call() {
+        public void run() {
             AbstractCommand command = null;
             try (   /*Note, OutputStream MUST come before InputStreams,
                      * otherwise will block*/
@@ -213,36 +204,31 @@ public class Server {
                     ObjectInputStream oiStream = new ObjectInputStream( iStream );
                     ){
                 Object obj = oiStream.readObject();
-                /*First confirm if returned obj is a command*/
-                if (!(obj instanceof AbstractCommand)){
-                        /*if command not recognized, write NAK string to output stream*/
-                        cst.serverNAKReadByClient = true;
-                        log.warn("Command not recognized");
-                        ooStream.writeObject("Command not recognized");
-                        throw new ClassNotFoundException("Command must be an instance of"
-                                + " AbstractCommand");
+                //read object and write handling branching statments
+                if (!(obj instanceof AbstractCommand)) {
+                    log.warn("Command not recognized");
+                    throw new ClassNotFoundException("Command must be an instance of"
+                          + " AbstractCommand");
                 } else {
                     command = (AbstractCommand) obj;
-                    /*execute the command*/
-                    cst.commandObjAcceptedAndResponseSentToClient = true;
                     command.setReceiver(receiver);
-                    if (command instanceof ShutdownCommand) {
-                        /*If shutdown command, execute shutdown and write back a message*/
-                        ooStream.writeObject("SHUTDOWN");
-                        receiver.action((ShutdownCommand)command);
-                    } else {
-                        /*If everything checks out, execute the command and write result back to 
-                         * the client*/
-                        receiver.pause(command.getWorkMillisMin(),
-                                command.getWorkMillisMax());
-                        command.execute();
-                        ooStream.writeObject(command.getResult());
-                    }
+                    receiver.action(command);
+                    command.execute();
+                    
                 }
+                /*shutdown command not yet implemented via a button, but when it is, 
+                 * this should control it
+                 */
+//                if (command instanceof ShutdownCommand) {
+//                  /*If shutdown command, execute shutdown and write back a message*/
+//                  ooStream.writeObject(command);
+//                  receiver.action((ShutdownCommand)command);
+//             
+                ooStream.writeObject(command);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-            return command;
+        
         }
     }
      

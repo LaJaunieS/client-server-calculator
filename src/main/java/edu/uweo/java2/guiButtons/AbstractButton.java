@@ -35,7 +35,7 @@ public abstract class AbstractButton extends JButton {
     
     /**Will be implemented by the AbstractButton sub-class
      */
-    public abstract BigDecimal execute();
+    public abstract AbstractCommand execute();
     
     /**Gets the instance of this AbstractButton's ButtonReceiver
      * @return this AbstractButton's ButtonReceiver instance

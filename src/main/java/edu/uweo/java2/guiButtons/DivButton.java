@@ -27,8 +27,8 @@ public class DivButton extends AbstractButton {
      * @see edu.uweo.java2.guiButtons.AbstractButton#execute()
      */
     @Override
-    public BigDecimal execute() {
-        BigDecimal serverResponse = 
+    public AbstractCommand execute() {
+        AbstractCommand serverResponse = 
                 this.getReceiver().action(this, value1, value2);
         return serverResponse;
     }

@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import app.ClientServerTester;
 import edu.uweo.java2.client.commands.AbstractCommand;
+import edu.uweo.java2.client.commands.NAKCommand;
 
 /**Encapsulates a client which makes a request to a Server. Writes an instance of 
  * an <code>AbstractCommand</code> subclass to an <code>ObjectOutputStream</code>
@@ -57,13 +58,13 @@ public class Client {
      * @return a <code>String</code> that is the acknowledgement sent from the server
      * @throws IOException if there was an error connecting to the server
      */
-    public BigDecimal execute(AbstractCommand command) throws IOException {
+    public AbstractCommand execute(AbstractCommand command) throws IOException {
         
         /*Get the IP address for this local machine*/
         InetAddress addr = InetAddress.getLoopbackAddress();
         
         /*will contain response/command result back from server*/
-        BigDecimal serverResponse=null;
+        AbstractCommand serverResponse=null;
         /*open socket to connect with server*/
         log.info("Making client request at port {}",this.port);
         
@@ -82,18 +83,15 @@ public class Client {
             cst.commandObjWrittenToOutputStream = true;
             /*write command object to send to server*/
             ooStream.writeObject(command);
-            /*get returned/executed command result from server*/
-//            if (!(oiStream.readObject() instanceof AbstractCommand))
-//                log.info("Object returned from server is not an instance of AbstractCommand");
-//            else 
-                
-                serverResponse = (BigDecimal) oiStream.readObject();
-                if (serverResponse.toString().equalsIgnoreCase("NAK")) {
-                    log.info("Invalid ACK from server");
-                } else {
-                    cst.ServerAckReadByClient = true;
-                    log.info("request from server acknowledged");
-                }
+
+            /*read command object sent back after server executes*/
+            Object obj = oiStream.readObject();
+            if (!(obj instanceof AbstractCommand)) {
+                log.warn("object from server not an instance of AbstractCommand");
+            } else {
+                serverResponse = (AbstractCommand) obj;
+            }
+            
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }

@@ -86,8 +86,8 @@ public class GUI implements Runnable {
         /*Initialize the components*/
         
         /*The input boxes*/
-        value1TextBox = new JTextField("0");
-        value2TextBox = new JTextField("0");
+        value1TextBox = new JTextField("0",10);
+        value2TextBox = new JTextField("0",10);
         resultsDisplay = new JLabel();
        
         /*The buttons*/
@@ -160,7 +160,7 @@ public class GUI implements Runnable {
             ButtonReceiver buttonReceiver = new ButtonReceiver();
             Double value1 = Double.parseDouble(value1TextBox.getText());
             Double value2 = Double.parseDouble(value2TextBox.getText());
-            BigDecimal serverResponse = null;
+            AbstractCommand serverResponse = null;
             
             obj.setValue1(value1);
             obj.setValue2(value2);
@@ -168,7 +168,7 @@ public class GUI implements Runnable {
             /*obj.execute will overload abstract method with appropriate button obj
              * and return a BigDecimal that is the serverResponse/calculation result*/
             serverResponse = obj.execute();
-            resultsDisplay.setText(serverResponse.toString());
+            resultsDisplay.setText(serverResponse.getResult().toString());
             
         }
         

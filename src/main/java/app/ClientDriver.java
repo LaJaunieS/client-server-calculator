@@ -40,7 +40,7 @@ public class ClientDriver {
         ShutdownCommand sdCommand = new ShutdownCommand();
         
         
-        List<BigDecimal> responseList = new ArrayList<BigDecimal>();
+        List<AbstractCommand> responseList = new ArrayList<AbstractCommand>();
         
         while (open) {
             try {
@@ -49,7 +49,9 @@ public class ClientDriver {
                 responseList.add(client.execute(divCommand));
                 responseList.add(client.execute(mulCommand));
                 //responseList.add(nakCommand.execute(nakCommand.new DummySerializableObject()));
-                responseList.stream().forEach(System.out::println);
+                for (AbstractCommand cmd : responseList) {
+                    System.out.println(cmd.getResult());
+                }
                 System.out.println(client.execute(sdCommand));
             } catch (IOException e) {
                 e.printStackTrace();

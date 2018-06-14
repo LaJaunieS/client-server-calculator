@@ -1,6 +1,7 @@
 package edu.uweo.java2.client.commands;
 
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import app.ClientServerTester;
  * @author slajaunie
  *
  */
-public class Receiver {
+public class Receiver implements Serializable {
     
     private static final Logger log = LoggerFactory.getLogger(Receiver.class);
     
