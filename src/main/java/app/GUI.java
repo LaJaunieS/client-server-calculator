@@ -9,7 +9,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,8 +47,8 @@ public class GUI implements Runnable {
      private JLabel resultLabel_;
      
      /*The input boxes*/
-     private JTextField value1TextBox;
-     private JTextField value2TextBox;
+     private JFormattedTextField value1TextBox;
+     private JFormattedTextField value2TextBox;
      private JLabel resultsDisplay;
          
      /*The container panels*/
@@ -86,14 +88,17 @@ public class GUI implements Runnable {
         /*Initialize the components*/
         
         /*The input boxes*/
-        value1TextBox = new JTextField("0",10);
-        value2TextBox = new JTextField("0",10);
+        value1TextBox = new JFormattedTextField(NumberFormat.getNumberInstance());
+        value2TextBox = new JFormattedTextField(NumberFormat.getNumberInstance());
         resultsDisplay = new JLabel();
+        value1TextBox.setValue(new Double(0));
+        value2TextBox.setValue(new Double(0));
+        
        
         /*The buttons*/
         addButton_ = new AddButton("Add",
-                        Double.parseDouble(value1TextBox.getText()),
-                        Double.parseDouble(value2TextBox.getText()));
+                        ((Double) value1TextBox.getValue()).doubleValue(),
+                        ((Double) value2TextBox.getValue()).doubleValue());
         subButton_ = new SubButton("Subtract",
                         Double.parseDouble(value1TextBox.getText()),
                         Double.parseDouble(value2TextBox.getText()));
